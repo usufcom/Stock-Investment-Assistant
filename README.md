@@ -1,5 +1,11 @@
-# Stock and Investment-Assistant
+# Stock and Investment Assistant
 A real-time stock quote and investment assistant built using OpenAI's API and the Finnhub API. This project allows users to interact with a chatbot that can fetch stock prices and offer investment advice based on current market conditions.
+
+## Screenshot
+
+Here’s a screenshot of the Stock Quote Assistant in action:
+
+![Stock and Investment Assistant Screenshot](Images/Interface_1.png)
 
 ## Features
 
