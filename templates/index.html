@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Quote Assistant</title>
+    <style>
+        /* General body styles for dark theme */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            margin: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            color: #979797;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        /* Chat box styles */
+        #chat-box {
+            border: 1px solid #444;
+            background-color: #1e1e1e;
+            padding: 15px;
+            height: 300px;
+            width: 80%;
+            overflow-y: scroll;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* User and Assistant message styles */
+        .user {
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .assistant {
+            color: #1e88e5;
+            margin-bottom: 10px;
+        }
+
+        /* Input and button styles */
+        input, button {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            width: 70%;
+        }
+
+        input {
+            background-color: #333;
+            color: #fff;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #6200ea;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3700b3;
+        }
+
+        input:focus, button:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(98, 0, 234, 0.6);
+        }
+
+        /* Ensure chat box scrolls down when new messages appear */
+        #chat-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Real-time Stock Quote and Investment Assistant</h1>
+    <h4>Designed by Youssoufa M.</h4>
+    <div id="chat-box"></div>
+    <div style="display: flex; justify-content: center; width: 80%; gap: 10px;">
+        <input type="text" id="user-input" placeholder="Ask about stock prices and investment advice..." style="width: 200%; padding: 12px; font-size: 16px;" onkeydown="checkEnter(event)" />
+        <button onclick="sendMessage()" style="padding: 8px 16px; font-size: 14px;">Send</button>
+    </div>
+    
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (!userInput) return;
+    
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<p class="user">You: ${userInput}</p>`;
+    
+            // Display "AI Assistant is thinking..." temporarily
+            chatBox.innerHTML += `<p class="assistant" id="thinking">AI Assistant is thinking...</p>`;
+    
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+    
+            // Fetch the response from the server
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: userInput })
+            });
+    
+            const data = await response.json();
+    
+            // Remove the "thinking" message and display the assistant's response
+            document.getElementById('thinking').remove();
+            chatBox.innerHTML += `<p class="assistant">Assistant: ${data.response}</p>`;
+    
+            // Clear the input field
+            document.getElementById('user-input').value = '';
+    
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    
+        // Detect Enter key press
+        function checkEnter(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>    
+</body>
+</html>
